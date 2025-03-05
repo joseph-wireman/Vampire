@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+        <title>Vampire Detector</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+        <script src="https://www.gstatic.com/charts/loader.js"></script>
+        
+        <script type="text/javascript">
+
+            google.charts.load('current', {'packages':['corechart']});
+
+            google.charts.setOnLoadCallback(drawChart);
+
+            function drawChart() {
+                var data = data_processing();
+
+                var options = {'title':'Vampires to Humans Pie Chart',
+                                'width':400,
+                                'height':300};
+
+                var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+                chart.draw(data, options);
+
+                
+            }
+            function insert_row() {
+                var table = document.getElementById("people_table");
+                var row = table.insertRow(1);
+
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
+                var cell5 = row.insertCell(4);
+
+
+                cell1.innerHTML = document.getElementById("testName").value;
+                cell2.innerHTML = document.querySelector('input[name=garlic]:checked').value;
+                cell3.innerHTML = document.querySelector('input[name=pale]:checked').value;
+                cell4.innerHTML = document.querySelector('input[name=shadow]:checked').value;
+                if (document.getElementById("mySelect").value == 1) {
+                    var randInt = Math.floor(Math.random()*2);
+                    if (randInt ==0) {
+                        cell5.innerHTML="YES"
+                    } else {
+                        cell5.innerHTML="NO"
+
+                    }
+                } else {
+                    cell5.innerHTML = determine_vamp(cell2.innerHTML, cell3.innerHTML, cell4.innerHTML);
+                    
+                }
+            }
+
+            function determine_vamp(garlic, pale, shadow) {
+                var total = 0;
+
+                if (garlic != 'x') {
+                    total += 3;
+                }
+                if (pale != 'x') {
+                    total += 3;
+                }
+                if (shadow != 'x') {
+                    total += 4;
+                }
+
+                if (total > 6) {
+                    return "YES";
+                } else {
+                    return "NO";
+                };
+
+            }
+
+            function data_processing() {
+                var table = document.querySelector('#people_table');
+                var human = 0;
+                var vampire = 0;
+                var resultData= new google.visualization.DataTable();
+
+                for (let i = 1; i < table.rows.length; i++) {
+                    if (table.rows[i].cells[4].innerHTML == "YES") {
+                        vampire++;
+                    } else {
+                        human++
+                    }
+                
+
+                }
+
+                resultData.addColumn('string', 'Element');
+                resultData.addColumn('number', 'Count');
+                resultData.addRows([
+                    ['Human', human],
+                    ['Vampire', vampire]
+                ]);
+
+                return resultData;
+
+
+                
+            }
+
+     
+        </script>
+
+    </head>
+    <body>
+        <div class="container">
+        <br>
+        <label for="mySelect">Select Model Logic</label>
+        <select class="form-control" id="mySelect">
+            <option value="1">Random Guess</option>
+            <option value="2">Threshold Based</option>
+        </select>
+        <br>
+        <label for="name">Name</label>
+        <br>
+        <input id="testName" type="text">
+        <br>
+
+        <br><br>
+        <label for="garlic">Does this person eat garlic?</label>
+        <div class="form-check-garlic" id="garlic">
+            <input class="form-check-input-garlic" type="radio" name="garlic" id="garlicYes" value="✔">
+            <label class="form-check-label" for="flexRadioDefault1">
+              Yes
+            </label>
+          </div>
+          <div class="form-check-garlic">
+            <input class="form-check-input-garlic" type="radio" name="garlic" id="garlicNo" value="x">
+            <label class="form-check-label" for="flexRadioDefault2">
+              No
+            </label>
+            <br>
+            <br>
+
+            <label for="garlic">Is this person's complexion pale?</label>
+        <div class="form-check" id="garlic">
+            <input class="form-check-input" type="radio" name="pale" id="paleYes" value="✔">
+            <label class="form-check-label" for="flexRadioDefault1">
+              Yes
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="pale" id="paleNo" value="x">
+            <label class="form-check-label" for="flexRadioDefault2">
+              No
+            </label>
+            <br><br>
+        </div>
+
+        <label for="garlic">Does this person have a shadow</label>
+        <div class="form-check" id="shadow">
+            <input class="form-check-input" type="radio" name="shadow" id="shadowYes" value="✔">
+            <label class="form-check-label" for="flexRadioDefault1">
+              Yes
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="shadow" id="shadowNo" value="x">
+            <label class="form-check-label" for="flexRadioDefault2">
+              No
+            </label>
+            <br>
+        </div>
+        <br><br>
+        <button class="btn btn-primary" onclick="insert_row()">Add to Table</button>
+
+        <br><br>
+
+
+        <div class="container">
+            <table class="table table-bordered" id="people_table">
+                <caption>People</caption>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+         
+                        <th>Garlic</th>
+                        <th>Pale</th>
+                        <th>Shadow</th>
+                        <th>Is Vampire?</th>
+                
+</tr><tr>
+                        <td>John</td>
+                        <td>x</td>
+                        <td>✔</td>
+                        <td>x</td>
+                        <td>YES</td>
+		 </tr><tr>
+			<td>Alex</td>
+			<td>x</td>
+			<td>x</td>
+			<td>x</td>
+			<td>YES</td>
+		</tr><tr>
+			<td>Ava</td>
+			<td>✔</td>
+			<td>x</td>
+			<td>✔</td>
+			<td>YES</td>
+		</tr><tr>
+			<td>Emma</td>
+			<td>✔</td>
+			<td>x</td>
+			<td>x</td>
+			<td>YES</td>
+		</tr><tr>
+			<td>Lee</td>
+			<td>x</td>
+			<td>✔</td>
+			<td>✔</td>
+			<td>NO</td>
+		
+                    </tr>
+                </thead>
+            </table>
+
+
+
+
+        </div>
+        <button class="btn btn-primary" onclick="drawChart()">Generate Pie Chart</button>
+
+        <div id="chart_div"></div>
+
+
+
+
+    </body>
+</html>
