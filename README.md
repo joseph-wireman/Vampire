@@ -1,9 +1,7 @@
 # HW4
 Web Applications 
 
-### Group Members
-Miguel Evans  
-Jon Jones  
+### Group Member
 Joseph Wireman    
 
 ### Quick Start:
